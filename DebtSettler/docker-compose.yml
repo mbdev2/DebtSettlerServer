@@ -1,0 +1,31 @@
+version: "3.6"
+
+services:
+  node-api:
+    container_name: debtsettler-server
+    restart: always
+    ports:
+      - "3000:3000"
+    image: debtsettler-node-js
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=docker
+    command: "npm start"
+    networks:
+      - debtsettler-network
+  mongo-db:
+    image: mongo
+    container_name: debtsettler-mongodb
+    ports:
+      - "27017-27019:27017-27019"
+    networks:
+      - debtsettler-network
+networks:
+  debtsettler-network:
+    name: debtsettler-network
+    driver: bridge

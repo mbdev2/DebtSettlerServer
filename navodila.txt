@@ -1,0 +1,7 @@
+Docker:
+docker-compose up --no-start //ustvarimo docker instance ampak ne zazenemo
+docker-compose down //odstranimo vse docker instance
+docker-compose up --no-start --build //ko zelimo ustvarit, ampak se je izvorna koda spremenila
+docker start debtsettler-mongodb
+docker exec -it debtsettler-mongodb mongosh //dostop do shella MongoDB baze
+docker logs debtsettler-server //prikaze logse serverja v Dockerju
