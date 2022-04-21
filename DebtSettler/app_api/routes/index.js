@@ -1,3 +1,5 @@
+//DStoken = token uporabnika
+//GStoken = token uporabnik v gospodinjstvu
 const express = require("express");
 const router = express.Router();
 
@@ -17,23 +19,22 @@ const ctrlUporabniki = require('../controllers/uporabniki');
 const ctrlGospodinjstva = require('../controllers/gospodinjstva');
 
 /* Avtentikacija */
-router.post("/registracija", ctrlAvtentikacija.registracija);
-router.post("/prijava", ctrlAvtentikacija.prijava);
+router.post("/registracija", ctrlAvtentikacija.registracija); //pricakuje ime, email, barvoUporabnika, geslo | ustvari uporabnika in vrne JWT token "DStoken"
+router.post("/prijava", ctrlAvtentikacija.prijava); //pricakuje email, geslo | vrne JWT token "DStoken"
 
 /* Gospodinjstvo */
-router.post('/gospodinjstvo/ustvari', ctrlGospodinjstva.ustvariGospodinjstvo);
+router.post('/gospodinjstvo/ustvari', avtentikacija, ctrlGospodinjstva.ustvariGospodinjstvo); //pricakuje DStoken, imeGospodinjstva, geslo | ustvari gospodinjstvo 
+router.get('/gospodinjstvo/tokeniUporabnikGospodinjstev', avtentikacija, ctrlGospodinjstva.tokenUporabnikGospodinjstva); //pricakuje DStoken | vrne array z imeniGospodinjstev in GStoken za vsako gospodinjstvu uporabnika 
+router.get('/gospodinjstvo/claniGospodinjstva', avtentikacija, ctrlGospodinjstva.claniGospodinjstva); //pricakuje GStoken | vrne clane gospodinjstva "imeUporabnika","uporabnikID","uporabnikVgospodinjstvuID","stanjeDenarja","porabljenDenar","zamrznjenStatus"
+router.post('/gospodinjstvo/dodajClana', avtentikacija, ctrlGospodinjstva.dodajClana); //pricakuje GStoken admina in email clana ki ga zelimo dodati | doda clana gospodinjstvu
+router.post('/gospodinjstvo/odstraniClana', avtentikacija, ctrlGospodinjstva.odstraniClana); //pricakuje GStoken admina in  GStoken clana ki ga zelimo odstraniti | odstrani clana gospodinjstvu
 router.get('/gospodinjstvo/izbrisi', ctrlGospodinjstva.izbrisiGospodinjstvo);
 router.post('/gospodinjstvo/posodobiImeGospodinjstva', ctrlGospodinjstva.posodobiImeGospodinjstva);
-router.post('/gospodinjstvo/dodajClana', ctrlGospodinjstva.dodajClana);
-router.delete('/gospodinjstvo/odstraniClana/:idClana', ctrlGospodinjstva.odstraniClana);
 router.get('/gospodinjstvo/zamrzniClana/:idClana', ctrlGospodinjstva.zamrzniClana);
 router.get('/gospodinjstvo/odmrzniClana/:idClana', ctrlGospodinjstva.odmrzniClana);
-router.get('/gospodinjstvo/claniGospodinjstva/:idGospodinjstva', ctrlGospodinjstva.claniGospodinjstva);
 router.post('/gospodinjstvo/adminPredaja', ctrlGospodinjstva.adminPredaja);
 
 /* Uporabniki */
-router.get('/users', ctrlUporabniki.pridobiVseUporabnike);
-router.get('/users/gospodinjstvaUporabnika', ctrlUporabniki.gospodinjstvaUporabnika);
 router.post('/users/pridobiId', ctrlUporabniki.vrniUpIdJavno);
 router.get('/users/nakupi', ctrlUporabniki.seznamMojihNakupov);
 router.post('/users/dodajSliko', ctrlUporabniki.dodajSliko);

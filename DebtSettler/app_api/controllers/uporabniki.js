@@ -6,10 +6,6 @@ const vrniUpId = (req, res, pkOdgovor) => {
   res.status(200).json({ status: "uspešno" });
 };
 
-const pridobiVseUporabnike = (req, res) => {
-  res.status(200).json({ status: "uspešno" });
-};
-
 const izbrisiUporabnika = (req, res) => {
   res.status(200).json({ status: "uspešno" });
 };
@@ -30,22 +26,16 @@ const vrniUpIdJavno = (req, res) => {
   res.status(200).json({ status: "uspešno" });
 };
 
-const gospodinjstvaUporabnika = (req, res) => {
-  res.status(200).json({ status: "uspešno" });
-};
-
 const dodajSliko = (req, res) => {
   res.status(200).json({ status: "uspešno" });
 };
 
 module.exports = {
   vrniUpId,
-  pridobiVseUporabnike,
   izbrisiUporabnika,
   posodobiUporabnika,
   seznamMojihNakupov,
   uporabnikDodajBarvo,
   vrniUpIdJavno,
-  gospodinjstvaUporabnika,
   dodajSliko
 };

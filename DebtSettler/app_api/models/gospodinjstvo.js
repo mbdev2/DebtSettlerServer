@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
-/*
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-*/
 
 const upVGosShema = new mongoose.Schema({
-    uporabnikID: { type: String, required: true }, //nism sure a rabm kle objekt uporabnikShema ali dam sam string 
+    uporabnikID: { type: String, unique: false, required: true }, //nism sure a rabm kle objekt uporabnikShema ali dam sam string 
     stanjeDenarja: { type: Number, required: true },
     porabljenDenar: { type: Number, required: true },
-    zamrznjenStatus: { type: Boolean, default: false }
+    zamrznjenStatus: { type: Boolean, default: false },
+    deleteStatus: { type: Boolean, default: false }
 });
 
 const nakupShema = new mongoose.Schema({
@@ -17,8 +15,8 @@ const nakupShema = new mongoose.Schema({
     opisNakupa: { type: String, required: true },
     datumNakupa: { type: Date, "default": Date.now },
     znesekNakupa: { type: Number, required: true },
-    upVGosID: upVGosShema,
-    tabelaUpVGos: [upVGosShema]
+    upVGosID: { type: String, required: true },
+    tabelaUpVGos: [String]
 });
 
 const nakupovalniSeznamArtikelShema = new mongoose.Schema({
@@ -28,14 +26,15 @@ const nakupovalniSeznamArtikelShema = new mongoose.Schema({
 });
 
 const gospodinjstvoShema = new mongoose.Schema({
-    imeGospodinjstva: { type: String, required: true },
+    imeGospodinjstva: { type: String, unique: true, required: true },
     nakljucnaVrednost: { type: String, required: true },
     zgoscenaVrednost: { type: String, required: true },
+    adminGospodinjstva: { type: String },
     uporabnikGospodinjstvo: [upVGosShema],
     nakupiGospodinjstvo: [nakupShema],
     nakupovalniSeznamGospodinjstvo: [nakupovalniSeznamArtikelShema]
 });
-/*
+
 gospodinjstvoShema.methods.nastaviGeslo = function (geslo) {
     this.nakljucnaVrednost = crypto.randomBytes(16).toString('hex');
     this.zgoscenaVrednost = crypto
@@ -49,14 +48,5 @@ gospodinjstvoShema.methods.preveriGeslo = function (geslo) {
         .toString('hex');
     return this.zgoscenaVrednost == zgoscenaVrednost;
 };
-
-gospodinjstvoShema.methods.generirajJwt = function () {
-    return jwt.sign({
-        _id: this._id,
-        ime: this.imeGospodinjstva,
-        exp: 317125598071
-    }, process.env.JWT_GESLO);
-};
-*/
 
 mongoose.model('gospodinjstvo', gospodinjstvoShema, 'gospodinjstvo');
