@@ -101,18 +101,10 @@ const generirajToken = (uporabnikID, idUporabnika, gospodinjstvoID, gospodinjstv
 }
 
 const izbrisiGospodinjstvo = (req, res) => {
-    res.status(200).json({ status: "uspešno" });
-};
-
-const posodobiImeGospodinjstva = (req, res) => {
-    res.status(200).json({ status: "uspešno" });
-};
-
-const dodajClana = (req, res) => {
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
-        .find({ '_id': idGospodinjstva })
+        .findById(idGospodinjstva)
         .exec((napaka, gospodinjstvo) => {
             if (!gospodinjstvo) {
                 return res.status(404).json({
@@ -122,7 +114,63 @@ const dodajClana = (req, res) => {
             } else if (napaka) {
                 return res.status(500).json(napaka);
             } else {
-                if (gospodinjstvo[0].adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
+                if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
+                    gospodinjstvo.remove()
+                    res.status(204).json({ status: "Gospodinjstvo uspešno izbrisano" });
+                }
+                else {
+                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                }
+            }
+        });
+};
+
+const posodobiImeGospodinjstva = (req, res) => {
+    var idGospodinjstva = req.payload.idGospodinjstva;
+    var idUporabnika = req.payload.idUporabnika;
+    Gospodinjstvo
+        .findById(idGospodinjstva)
+        .exec((napaka, gospodinjstvo) => {
+            if (!gospodinjstvo) {
+                return res.status(404).json({
+                    "sporočilo":
+                        "Ne najdem gospodinjstva s tem ID!"
+                });
+            } else if (napaka) {
+                return res.status(500).json(napaka);
+            } else {
+                if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
+                    gospodinjstvo.imeGospodinjstva = req.body.imeGospodinjstva;
+                    gospodinjstvo.save(napaka => {
+                        if (napaka) {
+                            res.status(500).json(napaka);
+                        } else {
+                            res.status(201).json({ status: "Ime gospodinjstva uspešno posodobljeno" });
+                        }
+                    });
+                }
+                else {
+                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                }
+            }
+        });
+};
+
+const dodajClana = (req, res) => {
+    var idGospodinjstva = req.payload.idGospodinjstva;
+    var idUporabnika = req.payload.idUporabnika;
+    Gospodinjstvo
+        .findById(idGospodinjstva)
+        .exec((napaka, gospodinjstvo) => {
+            if (!gospodinjstvo) {
+                return res.status(404).json({
+                    "sporočilo":
+                        "Ne najdem gospodinjstva s tem ID!"
+                });
+            } else if (napaka) {
+                return res.status(500).json(napaka);
+            } else {
+                if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
                     Uporabnik
                         .findOne({ 'email': req.body.email })
                         .exec((napaka, uporabnik) => {
@@ -134,8 +182,8 @@ const dodajClana = (req, res) => {
                             } else if (napaka) {
                                 return res.status(500).json(napaka);
                             } else {
-                                if (!gospodinjstvo[0].uporabnikGospodinjstvo.some(uporabnika => uporabnika.uporabnikID === uporabnik._id.toString())) { //preverimo ali je uporabnik ze v gospodinsjtvu
-                                    gospodinjstvo[0].uporabnikGospodinjstvo.addToSet({
+                                if (!gospodinjstvo.uporabnikGospodinjstvo.some(uporabnika => uporabnika.uporabnikID === uporabnik._id.toString())) { //preverimo ali je uporabnik ze v gospodinsjtvu
+                                    gospodinjstvo.uporabnikGospodinjstvo.addToSet({
                                         uporabnikID: uporabnik._id.toString(),
                                         stanjeDenarja: 0,
                                         porabljenDenar: 0
@@ -143,12 +191,12 @@ const dodajClana = (req, res) => {
                                     var status = "Uporabnik uspešno dodan."
                                 }
                                 else {
-                                    var uporabnik = gospodinjstvo[0].uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika);
+                                    var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika);
                                     uporabnik.zamrznjenStatus = false
                                     uporabnik.deleteStatus = false
                                     var status = "Uporabnik uspešno dodan nazaj (obstajal ze v bazi)."
                                 }
-                                gospodinjstvo[0].save(napaka => {
+                                gospodinjstvo.save(napaka => {
                                     if (napaka) {
                                         res.status(500).json(napaka);
                                     } else {
@@ -170,7 +218,7 @@ const odstraniClana = (req, res) => {
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
-        .find({ '_id': idGospodinjstva })
+        .findById(idGospodinjstva)
         .exec((napaka, gospodinjstvo) => {
             if (!gospodinjstvo) {
                 return res.status(404).json({
@@ -180,11 +228,11 @@ const odstraniClana = (req, res) => {
             } else if (napaka) {
                 return res.status(500).json(napaka);
             } else {
-                if (gospodinjstvo[0].adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
-                    var uporabnik = gospodinjstvo[0].uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika);
+                if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
+                    var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika);
                     uporabnik.zamrznjenStatus = true
                     uporabnik.deleteStatus = true
-                    gospodinjstvo[0].save(napaka => {
+                    gospodinjstvo.save(napaka => {
                         if (napaka) {
                             res.status(500).json(napaka);
                         } else {
@@ -210,7 +258,7 @@ const odmrzniClana = (req, res) => {
 const claniGospodinjstva = (req, res) => {
     var idGospodinjstva = req.payload.idGospodinjstva;
     Gospodinjstvo
-        .find({ '_id': idGospodinjstva })
+        .findById(idGospodinjstva)
         .exec((napaka, gospodinjstvo) => {
             if (!gospodinjstvo) {
                 return res.status(404).json({
@@ -221,8 +269,8 @@ const claniGospodinjstva = (req, res) => {
                 return res.status(500).json(napaka);
             } else {
                 var IDuporabnikovVgospodinsjtvu = [];
-                for (var i = 0; i < gospodinjstvo[0].uporabnikGospodinjstvo.length; i++) {
-                    var uporabnikGospodinjstva = gospodinjstvo[0].uporabnikGospodinjstvo[i];
+                for (var i = 0; i < gospodinjstvo.uporabnikGospodinjstvo.length; i++) {
+                    var uporabnikGospodinjstva = gospodinjstvo.uporabnikGospodinjstvo[i];
                     IDuporabnikovVgospodinsjtvu.push(uporabnikGospodinjstva.uporabnikID);
                 }
                 Uporabnik
@@ -236,14 +284,12 @@ const claniGospodinjstva = (req, res) => {
                         } else if (napaka) {
                             return res.status(500).json(napaka);
                         } else {
-                            console.log(uporabniki)
                             var uporabnikiGospodinsjtvaJSON = {
                                 uporabniki: []
                             };
-                            for (var i = 0; i < gospodinjstvo[0].uporabnikGospodinjstvo.length; i++) {
-                                var uporabnikGospodinjstva = gospodinjstvo[0].uporabnikGospodinjstvo[i];
+                            for (var i = 0; i < gospodinjstvo.uporabnikGospodinjstvo.length; i++) {
+                                var uporabnikGospodinjstva = gospodinjstvo.uporabnikGospodinjstvo[i];
                                 var uporabnik = uporabniki[i]
-                                console.log(uporabnik.ime)
                                 uporabnikiGospodinsjtvaJSON.uporabniki.push({
                                     "imeUporabnika": uporabnik.ime,
                                     "uporabnikID": uporabnikGospodinjstva.uporabnikID, //ID uporabnika globalno
@@ -253,7 +299,6 @@ const claniGospodinjstva = (req, res) => {
                                     "zamrznjenStatus": uporabnikGospodinjstva.zamrznjenStatus
                                 });
                             }
-                            console.log(uporabnikiGospodinsjtvaJSON.uporabniki[0]);
                             res.status(200).json(uporabnikiGospodinsjtvaJSON);
                         }
 
