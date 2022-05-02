@@ -44,18 +44,18 @@ router.post('/users/dodajSliko', avtentikacija, ctrlUporabniki.dodajSliko); // T
 router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika); //pricakuje DStoken uporabnika | pregleda ce je kje Admin, zamenja ID gospodinsjtvih v 'Uporabnik_je_izbrisan' in izbrise globalni vnos za uporabnika
 
 /* Nakupovalni seznam */
-router.get('/seznam/:gospodinsjtvoID', ctrlSeznam.pridobiVseGospodinjstvo);
-router.get('/seznam/:userID', ctrlSeznam.pridobiVseUser);
-router.post('/seznam', ctrlSeznam.vnesiNovArtikelSeznam);
-router.delete('/seznam/:idArtikla', ctrlSeznam.izbrisiArtikelSeznama);
-router.post('/seznam/:idArtikla', ctrlSeznam.posodobiVnos);
+router.get('/seznam/gospodinjstvo', avtentikacija, ctrlSeznam.pridobiVseGospodinjstvo); //pricakuje GStoken uporabnika | vrne seznam v gospodinsjtvu
+router.get('/seznam/user', avtentikacija, ctrlSeznam.pridobiVseUser); //pricakuje GStoken uporabnika | vrne seznam uporabnika v gospodinsjtvu
+router.post('/seznam/novo', avtentikacija, ctrlSeznam.vnesiNovArtikelSeznam); //pricakuje GStoken uporabnika, opis, naslov, kolicino | doda na seznam
+router.delete('/seznam/:idArtikla', avtentikacija, ctrlSeznam.izbrisiArtikelSeznama); //pricakuje GStoken posiljatelja ali admina in :idArtikla v URL | izbrise artikel iz seznama
+router.post('/seznam/posodobi', avtentikacija, ctrlSeznam.posodobiVnos); //pricakuje GStoken uporabnika, opis, naslov, kolicino, idArtikla, stanje aquired (true/ false) | posodobi artikel na seznamu
 
 /* Nakupi */
-router.get('/nakupi/gospodinjstvo', avtentikacija, ctrlNakupi.pridobiVseNakupeGospodinjstvo);
-router.get('/nakupi/user', avtentikacija, ctrlNakupi.pridobiVseNakupeUser);
-router.post('/nakupi/dodajNakup', avtentikacija, ctrlNakupi.vnesiNakup); //naj podpira opcijo, da izberes katere uporabnike naj upošteva
-router.post('/nakupi/poravnavaDolga', ctrlNakupi.poravnavaDolga); //izmenjava denarja med ljudmi
-router.delete('/nakupi/:idNakupa', ctrlNakupi.izbrisiNakup);
+router.get('/nakupi/gospodinjstvo', avtentikacija, ctrlNakupi.pridobiVseNakupeGospodinjstvo); //pricakuje GStoken uporabnika | vrne vse nakupve v gospodinsjtvu
+router.get('/nakupi/user', avtentikacija, ctrlNakupi.pridobiVseNakupeUser); //pricakuje GStoken uporabnika | vrne vse nakupe uporabnika v gospodinsjtvu
+router.post('/nakupi/dodajNakup', avtentikacija, ctrlNakupi.vnesiNakup); //pricakuje GStoken uporabnika, kategorijaNakupa (number), imeTrgovine, opisNakupa, znesekNakupa, tabelaUpVGos (uporabniki, ki so bili udeleženi pri nakupu) | vnese nakup in pososodbi stanjeDenarja, porabljeDenar za vse uporabnike
+router.post('/nakupi/poravnavaDolga', avtentikacija, ctrlNakupi.poravnavaDolga); //pricakuje GStoken posiljatelja, prejemnikIdUpvGos (upVGosID prejemnika), znesek | poravna dolg in vpiše kot nakup z kategorijo 0
+router.delete('/nakupi/:idNakupa', avtentikacija, ctrlNakupi.izbrisiNakup); //pricakuje GStoken posiljatelja ali admina in :idNakupa v URL | izbrise nakup in povrne denarna sredstva
 
 /* Podatkovna baza */
 router.get('/brisidb', ctrlOstalo.brisiDB);

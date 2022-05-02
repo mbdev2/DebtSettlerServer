@@ -23,6 +23,8 @@ const nakupovalniSeznamArtikelShema = new mongoose.Schema({
     naslov: { type: String, required: true },
     opis: { type: String, required: true },
     kolicina: { type: Number, required: true },
+    upVGosID: { type: String, required: true },
+    aquired: { type: Boolean, default: false }
 });
 
 const gospodinjstvoShema = new mongoose.Schema({
