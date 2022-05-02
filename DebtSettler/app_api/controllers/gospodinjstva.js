@@ -46,12 +46,12 @@ const ustvariGospodinjstvo = (req, res) => {
                     gospodinjstvo.save(napaka => {
                         if (napaka) {
                             if (napaka.name == "MongoError" && napaka.code == 11000) {
-                                res.status(409).json({ "sporočilo": "Gospodinjstvo s tem imenom je že registrirano" });
+                                return res.status(409).json({ "sporočilo": "Gospodinjstvo s tem imenom je že registrirano" });
                             } else {
-                                res.status(500).json(napaka);
+                                return res.status(500).json(napaka);
                             }
                         } else {
-                            res.status(201).json({ status: "Gospodinjstvo uspešno ustvarjeno." });
+                            return res.status(201).json({ status: "Gospodinjstvo uspešno ustvarjeno." });
                         }
                     });
                 }
@@ -65,7 +65,7 @@ const tokenUporabnikGospodinjstva = (req, res) => {
             .find({ 'uporabnikGospodinjstvo.uporabnikID': idUporabnika }) // poiscemo vse gospodinsjtva v katerih je ta uporabnik
             .exec((napaka, gospodinjstvaUp) => {
                 if (napaka) {
-                    res.status(500).json(napaka);
+                    return res.status(500).json(napaka);
                 }
                 else {
                     var tokensJSON = {
@@ -82,7 +82,7 @@ const tokenUporabnikGospodinjstva = (req, res) => {
                             "GStoken": token //ID uporabnika v gospodinjstvu
                         });
                     }
-                    res.status(200).json(tokensJSON);
+                    return res.status(200).json(tokensJSON);
                 }
             });
     });
@@ -100,6 +100,9 @@ const generirajToken = (upVGosID, idUporabnika, gospodinjstvoID, gospodinjstvoIm
 }
 
 const izbrisiGospodinjstvo = (req, res) => {
+    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
@@ -115,16 +118,19 @@ const izbrisiGospodinjstvo = (req, res) => {
             } else {
                 if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
                     gospodinjstvo.remove()
-                    res.status(204).json({ status: "Gospodinjstvo uspešno izbrisano" });
+                    return res.status(204).json({ status: "Gospodinjstvo uspešno izbrisano" });
                 }
                 else {
-                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
 };
 
 const posodobiImeGospodinjstva = (req, res) => {
+    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
@@ -142,20 +148,23 @@ const posodobiImeGospodinjstva = (req, res) => {
                     gospodinjstvo.imeGospodinjstva = req.body.imeGospodinjstva;
                     gospodinjstvo.save(napaka => {
                         if (napaka) {
-                            res.status(500).json(napaka);
+                            return res.status(500).json(napaka);
                         } else {
-                            res.status(201).json({ status: "Ime gospodinjstva uspešno posodobljeno" });
+                            return res.status(201).json({ status: "Ime gospodinjstva uspešno posodobljeno" });
                         }
                     });
                 }
                 else {
-                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
 };
 
 const dodajClana = (req, res) => {
+    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
@@ -197,9 +206,9 @@ const dodajClana = (req, res) => {
                                 }
                                 gospodinjstvo.save(napaka => {
                                     if (napaka) {
-                                        res.status(500).json(napaka);
+                                        return res.status(500).json(napaka);
                                     } else {
-                                        res.status(201).json({ status: status });
+                                        return res.status(201).json({ status: status });
                                     }
                                 });
                             }
@@ -207,13 +216,16 @@ const dodajClana = (req, res) => {
                         });
                 }
                 else {
-                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
 };
 
 const odstraniClana = (req, res) => {
+    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
@@ -233,20 +245,23 @@ const odstraniClana = (req, res) => {
                     uporabnik.deleteStatus = true
                     gospodinjstvo.save(napaka => {
                         if (napaka) {
-                            res.status(500).json(napaka);
+                            return res.status(500).json(napaka);
                         } else {
-                            res.status(201).json({ status: "Uporabnik uspešno odstranjen." });
+                            return res.status(201).json({ status: "Uporabnik uspešno odstranjen." });
                         }
                     });
                 }
                 else {
-                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
 };
 
 const zamrzniClana = (req, res) => {
+    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var upVGosID = req.payload.upVGosID;
     Gospodinjstvo
@@ -261,19 +276,26 @@ const zamrzniClana = (req, res) => {
                 return res.status(500).json(napaka);
             } else {
                 var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik._id == upVGosID);
-                uporabnik.zamrznjenStatus = true
-                gospodinjstvo.save(napaka => {
-                    if (napaka) {
-                        res.status(500).json(napaka);
-                    } else {
-                        res.status(201).json({ status: "Uporabnik uspešno zamrznjen." });
-                    }
-                });
+                if (!uporabnik.deleteStatus) {
+                    uporabnik.zamrznjenStatus = true
+                    gospodinjstvo.save(napaka => {
+                        if (napaka) {
+                            return res.status(500).json(napaka);
+                        } else {
+                            return res.status(201).json({ status: "Uporabnik uspešno zamrznjen." });
+                        }
+                    });
+                } else {
+                    return res.status(500).json({ status: "Nedovoljena poteza. Uporabnik je trenutno v stanju odstranjen" });
+                }
             }
         });
 };
 
 const odmrzniClana = (req, res) => {
+    if (!req.payload.upVGosID && !req.payload.idGospodinjstva) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var upVGosID = req.payload.upVGosID;
     Gospodinjstvo
@@ -288,19 +310,28 @@ const odmrzniClana = (req, res) => {
                 return res.status(500).json(napaka);
             } else {
                 var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik._id == upVGosID);
-                uporabnik.zamrznjenStatus = false
-                gospodinjstvo.save(napaka => {
-                    if (napaka) {
-                        res.status(500).json(napaka);
-                    } else {
-                        res.status(201).json({ status: "Uporabnik uspešno odmrznjen." });
-                    }
-                });
+                console.log(uporabnik.deleteStatus)
+                if (!uporabnik.deleteStatus) {
+                    uporabnik.zamrznjenStatus = false
+                    gospodinjstvo.save(napaka => {
+                        if (napaka) {
+                            return res.status(500).json(napaka);
+                        } else {
+                            return res.status(201).json({ status: "Uporabnik uspešno odmrznjen." });
+                        }
+                    });
+                }
+                else {
+                    return res.status(500).json({ status: "Nedovoljena poteza. Uporabnik je trenutno v stanju odstranjen" });
+                }
             }
         });
 };
 
 const claniGospodinjstva = (req, res) => {
+    if (!req.payload.idGospodinjstva) {
+        return res.status(401).json("Gospodinjstvo ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     Gospodinjstvo
         .findById(idGospodinjstva)
@@ -316,7 +347,8 @@ const claniGospodinjstva = (req, res) => {
                 var IDuporabnikovVgospodinsjtvu = [];
                 for (var i = 0; i < gospodinjstvo.uporabnikGospodinjstvo.length; i++) {
                     var uporabnikGospodinjstva = gospodinjstvo.uporabnikGospodinjstvo[i];
-                    IDuporabnikovVgospodinsjtvu.push(uporabnikGospodinjstva.uporabnikID);
+                    if (uporabnikGospodinjstva.uporabnikID !== 'Uporabnik_je_izbrisan')
+                        IDuporabnikovVgospodinsjtvu.push(uporabnikGospodinjstva.uporabnikID);
                 }
                 Uporabnik
                     .find({ "_id": { $in: IDuporabnikovVgospodinsjtvu } })
@@ -335,6 +367,10 @@ const claniGospodinjstva = (req, res) => {
                             for (var i = 0; i < gospodinjstvo.uporabnikGospodinjstvo.length; i++) {
                                 var uporabnikGospodinjstva = gospodinjstvo.uporabnikGospodinjstvo[i]
                                 var uporabnik = uporabniki.find(u => u._id == uporabnikGospodinjstva.uporabnikID)
+                                if (!uporabnik) {
+                                    var uporabnik = {}
+                                    uporabnik.ime = "Izbrisani uporabnik"
+                                }
                                 uporabnikiGospodinsjtvaJSON.uporabniki.push({
                                     "imeUporabnika": uporabnik.ime,
                                     "idUporabnika": uporabnikGospodinjstva.uporabnikID, //ID uporabnika globalno
@@ -345,7 +381,7 @@ const claniGospodinjstva = (req, res) => {
                                     "deleteStatus": uporabnikGospodinjstva.deleteStatus
                                 });
                             }
-                            res.status(200).json(uporabnikiGospodinsjtvaJSON);
+                            return res.status(200).json(uporabnikiGospodinsjtvaJSON);
                         }
 
                     });
@@ -354,6 +390,9 @@ const claniGospodinjstva = (req, res) => {
 };
 
 const adminPredaja = (req, res) => {
+    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
+        return res.status(401).json("Uporabnik ne obstaja");
+    }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
     Gospodinjstvo
@@ -372,18 +411,18 @@ const adminPredaja = (req, res) => {
                         gospodinjstvo.adminGospodinjstva = req.body.idUporabnika
                         gospodinjstvo.save(napaka => {
                             if (napaka) {
-                                res.status(500).json(napaka);
+                                return res.status(500).json(napaka);
                             } else {
-                                res.status(201).json({ status: "Admin uspešno zamenjan." });
+                                return res.status(201).json({ status: "Admin uspešno zamenjan." });
                             }
                         });
                     }
                     else {
-                        res.status(404).json({ status: "Uporabnik s podanim idUporabnika ne obstaja v tem gospodinsjtvu" });
+                        return res.status(404).json({ status: "Uporabnik s podanim idUporabnika ne obstaja v tem gospodinsjtvu" });
                     }
                 }
                 else {
-                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });

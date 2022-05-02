@@ -37,11 +37,11 @@ router.get('/gospodinjstvo/odmrzniClana', avtentikacija, ctrlGospodinjstva.odmrz
 router.post('/gospodinjstvo/adminPredaja', avtentikacija, ctrlGospodinjstva.adminPredaja); //pricakuje GStoken admina in idUporabnika novega admina | posodobi admina gospodinjstva
 
 /* Uporabniki */
-router.post('/users/pridobiId', ctrlUporabniki.vrniUpIdJavno);
-router.get('/users/nakupi', ctrlUporabniki.seznamMojihNakupov);
-router.post('/users/dodajSliko', ctrlUporabniki.dodajSliko);
-router.post('/users/posodobiUporabnika', ctrlUporabniki.posodobiUporabnika);
-router.delete('/users/izbrisi', ctrlUporabniki.izbrisiUporabnika);
+router.get('/users/podatkiUporabnika', avtentikacija, ctrlUporabniki.podatkiUporabnika); //pricakuje DStoken uporabnika | vrne imeUporabnika, emailUporabnika, barvaUporabnika
+router.post('/users/posodobiUporabnika', avtentikacija, ctrlUporabniki.posodobiUporabnika); //pricakuje DStoken uporabnika, imeUp, emailUp, barvaUp | posodobi uporabnika
+router.post('/users/menjavaGesla', avtentikacija, ctrlUporabniki.menjavaGesla); //pricakuje DStoken, geslo, novoGeslo | posodobi geslo uporabnika
+router.post('/users/dodajSliko', avtentikacija, ctrlUporabniki.dodajSliko); // TBD
+router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika);
 
 /* Nakupovalni seznam */
 router.get('/seznam/:gospodinsjtvoID', ctrlSeznam.pridobiVseGospodinjstvo);

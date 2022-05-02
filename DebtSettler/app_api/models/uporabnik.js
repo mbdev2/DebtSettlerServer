@@ -26,7 +26,7 @@ uporabnikShema.methods.preveriGeslo = function (geslo) {
 
 uporabnikShema.methods.generirajJwt = function () {
   return jwt.sign({
-    _id: this._id,
+    idUporabnika: this._id,
     email: this.email,
     ime: this.ime,
     exp: 317125598071
