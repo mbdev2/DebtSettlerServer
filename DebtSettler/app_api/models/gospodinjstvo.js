@@ -10,7 +10,7 @@ const upVGosShema = new mongoose.Schema({
 });
 
 const nakupShema = new mongoose.Schema({
-    kategorijaNakupa: { type: String },
+    kategorijaNakupa: { type: Number, required: true },
     imeTrgovine: { type: String, required: true },
     opisNakupa: { type: String, required: true },
     datumNakupa: { type: Date, "default": Date.now },

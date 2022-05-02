@@ -39,9 +39,9 @@ router.post('/gospodinjstvo/adminPredaja', avtentikacija, ctrlGospodinjstva.admi
 /* Uporabniki */
 router.get('/users/podatkiUporabnika', avtentikacija, ctrlUporabniki.podatkiUporabnika); //pricakuje DStoken uporabnika | vrne imeUporabnika, emailUporabnika, barvaUporabnika
 router.post('/users/posodobiUporabnika', avtentikacija, ctrlUporabniki.posodobiUporabnika); //pricakuje DStoken uporabnika, imeUp, emailUp, barvaUp | posodobi uporabnika
-router.post('/users/menjavaGesla', avtentikacija, ctrlUporabniki.menjavaGesla); //pricakuje DStoken, geslo, novoGeslo | posodobi geslo uporabnika
+router.post('/users/menjavaGesla', avtentikacija, ctrlUporabniki.menjavaGesla); //pricakuje DStoken uporabnika geslo, novoGeslo | posodobi geslo uporabnika
 router.post('/users/dodajSliko', avtentikacija, ctrlUporabniki.dodajSliko); // TBD
-router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika);
+router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika); //pricakuje DStoken uporabnika | pregleda ce je kje Admin, zamenja ID gospodinsjtvih v 'Uporabnik_je_izbrisan' in izbrise globalni vnos za uporabnika
 
 /* Nakupovalni seznam */
 router.get('/seznam/:gospodinsjtvoID', ctrlSeznam.pridobiVseGospodinjstvo);
@@ -51,10 +51,10 @@ router.delete('/seznam/:idArtikla', ctrlSeznam.izbrisiArtikelSeznama);
 router.post('/seznam/:idArtikla', ctrlSeznam.posodobiVnos);
 
 /* Nakupi */
-router.get('/nakupi/:gospodinsjtvoID', ctrlNakupi.pridobiVseNakupeGospodinjstvo);
-router.get('/nakupi/:userID', ctrlNakupi.pridobiVseNakupeUser);
-router.post('/dodajnakup', ctrlNakupi.vnesiNakup); //naj podpira opcijo, da izberes katere uporabnike naj upošteva
-router.post('/poravnavadolga', ctrlNakupi.poravnavaDolga); //izmenjava denarja med ljudmi
+router.get('/nakupi/gospodinjstvo', avtentikacija, ctrlNakupi.pridobiVseNakupeGospodinjstvo);
+router.get('/nakupi/user', avtentikacija, ctrlNakupi.pridobiVseNakupeUser);
+router.post('/nakupi/dodajNakup', avtentikacija, ctrlNakupi.vnesiNakup); //naj podpira opcijo, da izberes katere uporabnike naj upošteva
+router.post('/nakupi/poravnavaDolga', ctrlNakupi.poravnavaDolga); //izmenjava denarja med ljudmi
 router.delete('/nakupi/:idNakupa', ctrlNakupi.izbrisiNakup);
 
 /* Podatkovna baza */

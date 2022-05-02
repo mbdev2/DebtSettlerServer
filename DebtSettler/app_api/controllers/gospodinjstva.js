@@ -100,8 +100,8 @@ const generirajToken = (upVGosID, idUporabnika, gospodinjstvoID, gospodinjstvoIm
 }
 
 const izbrisiGospodinjstvo = (req, res) => {
-    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.idUporabnika || !req.payload.idGospodinjstva) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
@@ -128,8 +128,8 @@ const izbrisiGospodinjstvo = (req, res) => {
 };
 
 const posodobiImeGospodinjstva = (req, res) => {
-    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.imeGospodinjstv) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
@@ -162,8 +162,8 @@ const posodobiImeGospodinjstva = (req, res) => {
 };
 
 const dodajClana = (req, res) => {
-    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.email) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
@@ -223,8 +223,8 @@ const dodajClana = (req, res) => {
 };
 
 const odstraniClana = (req, res) => {
-    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.upVGosID) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
@@ -259,8 +259,8 @@ const odstraniClana = (req, res) => {
 };
 
 const zamrzniClana = (req, res) => {
-    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var upVGosID = req.payload.upVGosID;
@@ -293,8 +293,8 @@ const zamrzniClana = (req, res) => {
 };
 
 const odmrzniClana = (req, res) => {
-    if (!req.payload.upVGosID && !req.payload.idGospodinjstva) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var upVGosID = req.payload.upVGosID;
@@ -330,7 +330,7 @@ const odmrzniClana = (req, res) => {
 
 const claniGospodinjstva = (req, res) => {
     if (!req.payload.idGospodinjstva) {
-        return res.status(401).json("Gospodinjstvo ne obstaja");
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     Gospodinjstvo
@@ -390,8 +390,8 @@ const claniGospodinjstva = (req, res) => {
 };
 
 const adminPredaja = (req, res) => {
-    if (!(req.payload.upVGosID && req.payload.idGospodinjstva)) {
-        return res.status(401).json("Uporabnik ne obstaja");
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.idUporabnika) {
+        return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
     var idUporabnika = req.payload.idUporabnika;
