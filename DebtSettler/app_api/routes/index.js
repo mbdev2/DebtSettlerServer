@@ -27,14 +27,14 @@ router.post("/prijava", ctrlAvtentikacija.prijava); //pricakuje email, geslo | v
 /* Gospodinjstvo */
 router.post('/gospodinjstvo/ustvari', avtentikacija, ctrlGospodinjstva.ustvariGospodinjstvo); //pricakuje DStoken, imeGospodinjstva, geslo | ustvari gospodinjstvo 
 router.get('/gospodinjstvo/tokeniUporabnikGospodinjstev', avtentikacija, ctrlGospodinjstva.tokenUporabnikGospodinjstva); //pricakuje DStoken | vrne array z imeniGospodinjstev in GStoken za vsako gospodinjstvu uporabnika 
-router.get('/gospodinjstvo/claniGospodinjstva', avtentikacija, ctrlGospodinjstva.claniGospodinjstva); //pricakuje GStoken | vrne clane gospodinjstva "imeUporabnika","uporabnikID","uporabnikVgospodinjstvuID","stanjeDenarja","porabljenDenar","zamrznjenStatus"
+router.get('/gospodinjstvo/claniGospodinjstva', avtentikacija, ctrlGospodinjstva.claniGospodinjstva); //pricakuje GStoken uporabnika | vrne clane gospodinjstva "imeUporabnika","uporabnikID","uporabnikVgospodinjstvuID","stanjeDenarja","porabljenDenar","zamrznjenStatus"
 router.post('/gospodinjstvo/dodajClana', avtentikacija, ctrlGospodinjstva.dodajClana); //pricakuje GStoken admina in email clana ki ga zelimo dodati | doda clana gospodinjstvu (deluje tudi ce je clan bil odstranjen in je zdej ponovno dodan)
 router.post('/gospodinjstvo/odstraniClana', avtentikacija, ctrlGospodinjstva.odstraniClana); //pricakuje GStoken admina in upVGosID clana ki ga zelimo odstraniti | odstrani clana gospodinjstvu
 router.delete('/gospodinjstvo/izbrisi', avtentikacija, ctrlGospodinjstva.izbrisiGospodinjstvo); //pricakuje GStoken admina | zbrise gospodinjstvo
 router.post('/gospodinjstvo/posodobiImeGospodinjstva', avtentikacija, ctrlGospodinjstva.posodobiImeGospodinjstva); //pricakuje GStoken admina in novo imeGospodinsjtva | posodobi ime gospodinsjtva
-router.post('/gospodinjstvo/zamrzniClana', avtentikacija, ctrlGospodinjstva.zamrzniClana);
-router.post('/gospodinjstvo/odmrzniClana', ctrlGospodinjstva.odmrzniClana);
-router.post('/gospodinjstvo/adminPredaja', ctrlGospodinjstva.adminPredaja);
+router.get('/gospodinjstvo/zamrzniClana', avtentikacija, ctrlGospodinjstva.zamrzniClana); //pricakuje GStoken uporabnika | zamrzne uporabnika
+router.get('/gospodinjstvo/odmrzniClana', avtentikacija, ctrlGospodinjstva.odmrzniClana); //pricakuje GStoken uporabnika | odmrzne uporabnika
+router.post('/gospodinjstvo/adminPredaja', avtentikacija, ctrlGospodinjstva.adminPredaja); //pricakuje GStoken admina in idUporabnika novega admina | posodobi admina gospodinjstva
 
 /* Uporabniki */
 router.post('/users/pridobiId', ctrlUporabniki.vrniUpIdJavno);

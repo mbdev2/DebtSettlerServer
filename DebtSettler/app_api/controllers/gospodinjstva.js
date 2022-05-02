@@ -43,7 +43,6 @@ const ustvariGospodinjstvo = (req, res) => {
                         porabljenDenar: 0,
                         zamrznjenStatus: false
                     });
-                    console.log(gospodinjstvo)
                     gospodinjstvo.save(napaka => {
                         if (napaka) {
                             if (napaka.name == "MongoError" && napaka.code == 11000) {
@@ -89,10 +88,10 @@ const tokenUporabnikGospodinjstva = (req, res) => {
     });
 };
 
-const generirajToken = (uporabnikID, idUporabnika, gospodinjstvoID, gospodinjstvoIme) => {
+const generirajToken = (upVGosID, idUporabnika, gospodinjstvoID, gospodinjstvoIme) => {
     return jwt.sign({
         _id: this._id,
-        idUporabnikGospodinjstva: uporabnikID,
+        upVGosID: upVGosID,
         idUporabnika: idUporabnika,
         idGospodinjstva: gospodinjstvoID,
         imeGospodinjstvas: gospodinjstvoIme,
@@ -191,9 +190,9 @@ const dodajClana = (req, res) => {
                                     var status = "Uporabnik uspešno dodan."
                                 }
                                 else {
-                                    var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika);
-                                    uporabnik.zamrznjenStatus = false
-                                    uporabnik.deleteStatus = false
+                                    var uporabnikPosodobi = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi.uporabnikID == uporabnik._id.toString()); //uporabnik._id==upVGosID
+                                    uporabnikPosodobi.zamrznjenStatus = false
+                                    uporabnikPosodobi.deleteStatus = false
                                     var status = "Uporabnik uspešno dodan nazaj (obstajal ze v bazi)."
                                 }
                                 gospodinjstvo.save(napaka => {
@@ -229,14 +228,14 @@ const odstraniClana = (req, res) => {
                 return res.status(500).json(napaka);
             } else {
                 if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
-                    var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika);
+                    var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik._id == req.body.upVGosID);
                     uporabnik.zamrznjenStatus = true
                     uporabnik.deleteStatus = true
                     gospodinjstvo.save(napaka => {
                         if (napaka) {
                             res.status(500).json(napaka);
                         } else {
-                            res.status(201).json({ status: "Uporabnik uspešno zamrznjen." });
+                            res.status(201).json({ status: "Uporabnik uspešno odstranjen." });
                         }
                     });
                 }
@@ -248,11 +247,57 @@ const odstraniClana = (req, res) => {
 };
 
 const zamrzniClana = (req, res) => {
-    res.status(200).json({ status: "uspešno" });
+    var idGospodinjstva = req.payload.idGospodinjstva;
+    var upVGosID = req.payload.upVGosID;
+    Gospodinjstvo
+        .findById(idGospodinjstva)
+        .exec((napaka, gospodinjstvo) => {
+            if (!gospodinjstvo) {
+                return res.status(404).json({
+                    "sporočilo":
+                        "Ne najdem gospodinjstva s tem ID!"
+                });
+            } else if (napaka) {
+                return res.status(500).json(napaka);
+            } else {
+                var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik._id == upVGosID);
+                uporabnik.zamrznjenStatus = true
+                gospodinjstvo.save(napaka => {
+                    if (napaka) {
+                        res.status(500).json(napaka);
+                    } else {
+                        res.status(201).json({ status: "Uporabnik uspešno zamrznjen." });
+                    }
+                });
+            }
+        });
 };
 
 const odmrzniClana = (req, res) => {
-    res.status(200).json({ status: "uspešno" });
+    var idGospodinjstva = req.payload.idGospodinjstva;
+    var upVGosID = req.payload.upVGosID;
+    Gospodinjstvo
+        .findById(idGospodinjstva)
+        .exec((napaka, gospodinjstvo) => {
+            if (!gospodinjstvo) {
+                return res.status(404).json({
+                    "sporočilo":
+                        "Ne najdem gospodinjstva s tem ID!"
+                });
+            } else if (napaka) {
+                return res.status(500).json(napaka);
+            } else {
+                var uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik._id == upVGosID);
+                uporabnik.zamrznjenStatus = false
+                gospodinjstvo.save(napaka => {
+                    if (napaka) {
+                        res.status(500).json(napaka);
+                    } else {
+                        res.status(201).json({ status: "Uporabnik uspešno odmrznjen." });
+                    }
+                });
+            }
+        });
 };
 
 const claniGospodinjstva = (req, res) => {
@@ -288,15 +333,16 @@ const claniGospodinjstva = (req, res) => {
                                 uporabniki: []
                             };
                             for (var i = 0; i < gospodinjstvo.uporabnikGospodinjstvo.length; i++) {
-                                var uporabnikGospodinjstva = gospodinjstvo.uporabnikGospodinjstvo[i];
-                                var uporabnik = uporabniki[i]
+                                var uporabnikGospodinjstva = gospodinjstvo.uporabnikGospodinjstvo[i]
+                                var uporabnik = uporabniki.find(u => u._id == uporabnikGospodinjstva.uporabnikID)
                                 uporabnikiGospodinsjtvaJSON.uporabniki.push({
                                     "imeUporabnika": uporabnik.ime,
-                                    "uporabnikID": uporabnikGospodinjstva.uporabnikID, //ID uporabnika globalno
-                                    "uporabnikVgospodinjstvuID": uporabnikGospodinjstva._id, //ID uporabnika v gospodinjstvu
+                                    "idUporabnika": uporabnikGospodinjstva.uporabnikID, //ID uporabnika globalno
+                                    "upVGosID": uporabnikGospodinjstva._id, //ID uporabnika v gospodinjstvu upVGosID
                                     "stanjeDenarja": uporabnikGospodinjstva.stanjeDenarja,
                                     "porabljenDenar": uporabnikGospodinjstva.porabljenDenar,
-                                    "zamrznjenStatus": uporabnikGospodinjstva.zamrznjenStatus
+                                    "zamrznjenStatus": uporabnikGospodinjstva.zamrznjenStatus,
+                                    "deleteStatus": uporabnikGospodinjstva.deleteStatus
                                 });
                             }
                             res.status(200).json(uporabnikiGospodinsjtvaJSON);
@@ -308,7 +354,39 @@ const claniGospodinjstva = (req, res) => {
 };
 
 const adminPredaja = (req, res) => {
-    res.status(200).json({ status: "uspešno" });
+    var idGospodinjstva = req.payload.idGospodinjstva;
+    var idUporabnika = req.payload.idUporabnika;
+    Gospodinjstvo
+        .findById(idGospodinjstva)
+        .exec((napaka, gospodinjstvo) => {
+            if (!gospodinjstvo) {
+                return res.status(404).json({
+                    "sporočilo":
+                        "Ne najdem gospodinjstva s tem ID!"
+                });
+            } else if (napaka) {
+                return res.status(500).json(napaka);
+            } else {
+                if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
+                    if (gospodinjstvo.uporabnikGospodinjstvo.some(uporabnika => uporabnika.uporabnikID == req.body.idUporabnika)) { //preverimo ali je uporabnik v gospodinsjtvu
+                        gospodinjstvo.adminGospodinjstva = req.body.idUporabnika
+                        gospodinjstvo.save(napaka => {
+                            if (napaka) {
+                                res.status(500).json(napaka);
+                            } else {
+                                res.status(201).json({ status: "Admin uspešno zamenjan." });
+                            }
+                        });
+                    }
+                    else {
+                        res.status(404).json({ status: "Uporabnik s podanim idUporabnika ne obstaja v tem gospodinsjtvu" });
+                    }
+                }
+                else {
+                    res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                }
+            }
+        });
 };
 
 module.exports = {
