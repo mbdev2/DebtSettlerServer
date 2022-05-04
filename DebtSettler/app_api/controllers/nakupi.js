@@ -6,6 +6,9 @@ const vnesiNakup = (req, res) => {
   if (!req.body.kategorijaNakupa || !req.body.imeTrgovine || !req.body.opisNakupa || !req.body.znesekNakupa || !req.payload.idGospodinjstva || !req.payload.idUporabnika) {
     return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
   }
+  if (req.body.znesekNakupa < 0) {
+    return res.status(400).json({ "sporočilo": "Znesek nakupa ne sme biti negativen" });
+  }
   var idGospodinjstva = req.payload.idGospodinjstva;
   var upVGosID = req.payload.upVGosID;
   Gospodinjstvo
@@ -175,10 +178,12 @@ const poravnavaDolga = (req, res) => {
         if (!uporabnikPrejemnik || !uporabnikPosiljatelj) {
           return res.status(500).json({ status: "Eden izmed podanih uporabnikov ne obstaja v tem gospodinsjtvu." });
         }
-        uporabnikPrejemnik.stanjeDenarja -= req.body.znesek
-        uporabnikPrejemnik.porabljenDenar -= req.body.znesek
-        uporabnikPosiljatelj.stanjeDenarja += req.body.znesek
-        uporabnikPosiljatelj.porabljenDenar += req.body.znesek
+        uporabnikPrejemnik.stanjeDenarja -= Math.round(req.body.znesek * 100) / 100
+        uporabnikPrejemnik.porabljenDenar -= Math.round(req.body.znesek * 100) / 100
+        uporabnikPosiljatelj.stanjeDenarja += Math.round(req.body.znesek * 100) / 100
+        uporabnikPosiljatelj.porabljenDenar += Math.round(req.body.znesek * 100) / 100
+        console.log(uporabnikPrejemnik)
+        console.log(uporabnikPosiljatelj)
         Uporabnik
           .find({ "_id": { $in: [uporabnikPrejemnik.uporabnikID, uporabnikPosiljatelj.uporabnikID] } })
           .exec((napaka, uporabniki) => {
