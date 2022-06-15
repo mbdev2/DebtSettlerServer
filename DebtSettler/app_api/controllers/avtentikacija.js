@@ -37,7 +37,13 @@ const prijava = (req, res) => {
         if (napaka)
             return res.status(500).json(napaka);
         if (uporabnik) {
-            res.status(200).json({ "DStoken": uporabnik.generirajJwt() });
+            var podatkiUpJSON = {
+                "imeUporabnika": uporabnik.ime,
+                "idUporabnika": uporabnik.id_,
+                "barvaUporabnika": uporabnik.barvaUporabnika,
+                "DStoken": uporabnik.generirajJwt()
+              };
+            res.status(200).json(podatkiUpJSON);
         } else {
             res.status(401).json(informacije);
         }
