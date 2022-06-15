@@ -39,7 +39,7 @@ const prijava = (req, res) => {
         if (uporabnik) {
             var podatkiUpJSON = {
                 "imeUporabnika": uporabnik.ime,
-                "idUporabnika": uporabnik.id_,
+                "idUporabnika": uporabnik.id,
                 "barvaUporabnika": uporabnik.barvaUporabnika,
                 "DStoken": uporabnik.generirajJwt()
               };

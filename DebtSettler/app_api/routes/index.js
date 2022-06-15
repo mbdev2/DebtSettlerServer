@@ -22,11 +22,11 @@ const ctrlGospodinjstva = require('../controllers/gospodinjstva');
 
 /* Avtentikacija */
 router.post("/registracija", ctrlAvtentikacija.registracija); //pricakuje ime, email, barvoUporabnika, geslo | ustvari uporabnika in vrne JWT token "DStoken"
-router.post("/prijava", ctrlAvtentikacija.prijava); //pricakuje email, geslo | vrne JWT token "DStoken"
+router.post("/prijava", ctrlAvtentikacija.prijava); //pricakuje email, geslo | vrne JWT token "DStoken", ime, idUporabnika in barvo
 
 /* Gospodinjstvo */
-router.post('/gospodinjstvo/ustvari', avtentikacija, ctrlGospodinjstva.ustvariGospodinjstvo); //pricakuje DStoken, imeGospodinjstva, geslo | ustvari gospodinjstvo 
-router.get('/gospodinjstvo/tokeniUporabnikGospodinjstev', avtentikacija, ctrlGospodinjstva.tokenUporabnikGospodinjstva); //pricakuje DStoken | vrne array z imeniGospodinjstev in GStoken za vsako gospodinjstvu uporabnika 
+router.post('/gospodinjstvo/ustvari', avtentikacija, ctrlGospodinjstva.ustvariGospodinjstvo); //pricakuje DStoken, imeGospodinjstva, geslo | ustvari gospodinjstvo
+router.get('/gospodinjstvo/tokeniUporabnikGospodinjstev', avtentikacija, ctrlGospodinjstva.tokenUporabnikGospodinjstva); //pricakuje DStoken | vrne array z imeniGospodinjstev in GStoken za vsako gospodinjstvu uporabnika
 router.get('/gospodinjstvo/claniGospodinjstva', avtentikacija, ctrlGospodinjstva.claniGospodinjstva); //pricakuje GStoken uporabnika | vrne clane gospodinjstva "imeUporabnika","uporabnikID","uporabnikVgospodinjstvuID","stanjeDenarja","porabljenDenar","zamrznjenStatus"
 router.post('/gospodinjstvo/dodajClana', avtentikacija, ctrlGospodinjstva.dodajClana); //pricakuje GStoken admina in email clana ki ga zelimo dodati | doda clana gospodinjstvu (deluje tudi ce je clan bil odstranjen in je zdej ponovno dodan)
 router.post('/gospodinjstvo/odstraniClana', avtentikacija, ctrlGospodinjstva.odstraniClana); //pricakuje GStoken admina in upVGosID clana ki ga zelimo odstraniti | odstrani clana gospodinjstvu
@@ -37,11 +37,11 @@ router.get('/gospodinjstvo/odmrzniClana', avtentikacija, ctrlGospodinjstva.odmrz
 router.post('/gospodinjstvo/adminPredaja', avtentikacija, ctrlGospodinjstva.adminPredaja); //pricakuje GStoken admina in idUporabnika novega admina | posodobi admina gospodinjstva
 
 /* Uporabniki */
-router.get('/users/podatkiUporabnika', avtentikacija, ctrlUporabniki.podatkiUporabnika); //pricakuje DStoken uporabnika | vrne imeUporabnika, emailUporabnika, barvaUporabnika
+router.get('/users/podatkiUporabnika', avtentikacija, ctrlUporabniki.podatkiUporabnika); //pricakuje DStoken uporabnika | vrne idUporabnika, imeUporabnika, emailUporabnika, barvaUporabnika
 router.post('/users/posodobiUporabnika', avtentikacija, ctrlUporabniki.posodobiUporabnika); //pricakuje DStoken uporabnika, imeUp, emailUp, barvaUp | posodobi uporabnika
 router.post('/users/menjavaGesla', avtentikacija, ctrlUporabniki.menjavaGesla); //pricakuje DStoken uporabnika geslo, novoGeslo | posodobi geslo uporabnika
 router.post('/users/dodajSliko', avtentikacija, ctrlUporabniki.dodajSliko); // TBD
-router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika); //pricakuje DStoken uporabnika | pregleda ce je kje Admin, zamenja ID gospodinsjtvih v 'Uporabnik_je_izbrisan' in izbrise globalni vnos za uporabnika
+router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika); //pricakuje DStoken uporabnika | pregleda ce je kje Admin, zamenja ID gospodSinsjtvih v 'Uporabnik_je_izbrisan' in izbrise globalni vnos za uporabnika
 
 /* Nakupovalni seznam */
 router.get('/seznam/gospodinjstvo', avtentikacija, ctrlSeznam.pridobiVseGospodinjstvo); //pricakuje GStoken uporabnika | vrne seznam v gospodinsjtvu
