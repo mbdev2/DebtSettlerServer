@@ -19,6 +19,7 @@ const podatkiUporabnika = (req, res) => {
         return res.status(500).json(napaka);
       } else {
         var podatkiUpJSON = {
+          "idUporabnika": uporabnik.id_,
           "imeUporabnika": uporabnik.ime,
           "emailUporabnika": uporabnik.email,
           "barvaUporabnika": uporabnik.barvaUporabnika
