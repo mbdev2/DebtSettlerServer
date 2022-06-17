@@ -37,7 +37,7 @@ const vnesiNovArtikelSeznam = (req, res) => {
 }
 
 const izbrisiArtikelSeznama = (req, res) => {
-  if (!req.params.idArtikla || !req.payload.idGospodinjstva || !req.payload.idUporabnika || !req.payload.upVGosID) {
+  if (!req.body.idArtikla || !req.payload.idGospodinjstva || !req.payload.idUporabnika || !req.payload.upVGosID) {
     return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
   }
   var idGospodinjstva = req.payload.idGospodinjstva;
@@ -52,11 +52,14 @@ const izbrisiArtikelSeznama = (req, res) => {
       } else if (napaka) {
         return res.status(500).json(napaka);
       } else {
-        var artikel = gospodinjstvo.nakupovalniSeznamGospodinjstvo.find(artikel => artikel._id == req.params.idArtikla);
-        if (!artikel) {
-          return res.status(404).json({ status: "Artikel ne obstaja." });
+        var tabelaArtiklov = req.body.idArtikla.split(',')
+        for (var i = 0; i < tabelaArtiklov.length; i++) {
+          var artikel = gospodinjstvo.nakupovalniSeznamGospodinjstvo.find(artikel => artikel._id == tabelaArtiklov[i]);
+          if (!artikel) {
+            return res.status(404).json({ status: "Uporabnik " + tabelaArtiklov[i] + " ne obstaja v tem gospodinsjtvu." });
+          }
+          artikel.remove()
         }
-        artikel.remove()
         gospodinjstvo.save(napaka => {
           if (napaka) {
             return res.status(500).json(napaka);
