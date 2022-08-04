@@ -16,7 +16,7 @@ const registracija = (req, res) => {
 
     uporabnik.save(napaka => {
         if (napaka) {
-            if (napaka.name == "MongoError" && napaka.code == 11000) {
+            if (napaka.name == "MongoError" || napaka.code == 11000) {
                 res.status(409).json({ "sporočilo": "Uporabnik s tem elektronskim naslovom je že registriran" });
             } else {
                 res.status(500).json(napaka);
