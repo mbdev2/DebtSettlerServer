@@ -64,7 +64,7 @@ const izbrisiArtikelSeznama = (req, res) => {
           if (napaka) {
             return res.status(500).json(napaka);
           } else {
-            return res.status(201).json({ status: "Artikel uspešno zbrisan." });
+            return res.status(204).json({ status: "Artikel uspešno zbrisan." });
           }
         });
       }

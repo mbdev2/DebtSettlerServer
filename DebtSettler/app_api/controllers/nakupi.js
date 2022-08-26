@@ -23,8 +23,8 @@ const vnesiNakup = (req, res) => {
         return res.status(500).json(napaka);
       } else {
         var tabelaDeležnihUp = req.body.tabelaUpVGos.split(',')
-        // deljenja nakupa z stanji denarja, primer: Nakup 15$, 3 deležniki. 
-        // Tisti k plača: stanjeDenarja + 10$ in porabljenDenar +15$, 
+        // deljenja nakupa z stanji denarja, primer: Nakup 15$, 3 deležniki.
+        // Tisti k plača: stanjeDenarja + 10$ in porabljenDenar +15$,
         // Druge dva: stanjeDenarja - 5$, porabljenDenar ostane enak.
         for (var i = 0; i < tabelaDeležnihUp.length; i++) {
           var uporabnikPosodobi = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == tabelaDeležnihUp[i]); //==upVGosID
@@ -102,7 +102,7 @@ const izbrisiNakup = (req, res) => {
             if (napaka) {
               return res.status(500).json(napaka);
             } else {
-              return res.status(201).json({ status: "Nakup uspešno zbrisan." });
+              return res.status(204).json({ status: "Nakup uspešno zbrisan." });
             }
           });
         }
