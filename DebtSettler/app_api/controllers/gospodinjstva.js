@@ -83,6 +83,7 @@ const tokenUporabnikGospodinjstva = (req, res) => {
                         }
                         tokensJSON.tokens.push({
                             "imeGospodinjstva": gospodinjstvo.imeGospodinjstva,
+                            "idGospodinjstva": gospodinjstvo._id,
                             "GStoken": token, //ID uporabnika v gospodinjstvu
                             "isAdmin": isAdmin
                         });
