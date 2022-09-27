@@ -8,3 +8,4 @@ docker exec -it debtsettler-mongodb mongosh //dostop do shella MongoDB baze
     - db.uporabnik.find() //izpise vse uporabnike
     - db.gospodinjstvo.find() //izpise vsa gospodinjstva
 docker logs debtsettler-server //prikaze logse serverja v Dockerju
+docker-compose up -d --build //build withotu destroying

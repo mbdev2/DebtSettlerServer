@@ -24,8 +24,8 @@ const ustvariGospodinjstvo = (req, res) => {
     vrniUpId(req, res, (req, res, idUporabnika) => {
         Uporabnik
             .findById(idUporabnika)
-            .exec((napaka, uporabnik) => {
-                if (!uporabnik) {
+            .exec((napaka, uporabnikG) => {
+                if (!uporabnikG) {
                     return res.status(404).json({
                         "sporočilo":
                             "Ne najdem uporabnika s podanim enoličnim identifikatorjem idUporabnika."
@@ -36,9 +36,9 @@ const ustvariGospodinjstvo = (req, res) => {
                     const gospodinjstvo = new Gospodinjstvo();
                     gospodinjstvo.imeGospodinjstva = req.body.imeGospodinjstva,
                         gospodinjstvo.nastaviGeslo(req.body.geslo),
-                        gospodinjstvo.adminGospodinjstva = uporabnik._id;
+                        gospodinjstvo.adminGospodinjstva = uporabnikG._id;
                     gospodinjstvo.uporabnikGospodinjstvo.push({
-                        uporabnikID: uporabnik._id,
+                        uporabnikID: uporabnikG._id,
                         stanjeDenarja: 0,
                         porabljenDenar: 0,
                         zamrznjenStatus: false
@@ -51,7 +51,17 @@ const ustvariGospodinjstvo = (req, res) => {
                                 return res.status(500).json(napaka);
                             }
                         } else {
-                            return res.status(201).json({ status: "Gospodinjstvo uspešno ustvarjeno." });
+                            var uporabnik;
+                            var token;
+                            var odgovor={};
+                            uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == uporabnikG._id);
+                            token = generirajToken(uporabnik._id, uporabnik.uporabnikID, gospodinjstvo._id, gospodinjstvo.imeGospodinjstva);
+                            odgovor={
+                              "imeGospodinjstva": gospodinjstvo.imeGospodinjstva,
+                              "idGospodinjstva": gospodinjstvo._id,
+                              "GStoken": token, //ID uporabnika v gospodinjstvu
+                            }
+                            return res.status(201).json(odgovor);
                         }
                     });
                 }
