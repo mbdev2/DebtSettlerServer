@@ -86,17 +86,20 @@ const tokenUporabnikGospodinjstva = (req, res) => {
                         var uporabnik;
                         var token;
                         uporabnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnik => uporabnik.uporabnikID == idUporabnika); // za vsko gospodinsjtvo poiscemo njegov upVgosID
-                        token = generirajToken(uporabnik._id, uporabnik.uporabnikID, gospodinjstvo._id, gospodinjstvo.imeGospodinjstva)
-                        var isAdmin=false
-                        if (gospodinjstvo.adminGospodinjstva == idUporabnika){
-                            isAdmin=true
+                        if (uporabnik.deleteStatus==false){
+                          token = generirajToken(uporabnik._id, uporabnik.uporabnikID, gospodinjstvo._id, gospodinjstvo.imeGospodinjstva)
+                          var isAdmin=false
+                          if (gospodinjstvo.adminGospodinjstva == idUporabnika){
+                              isAdmin=true
+                          }
+                          tokensJSON.tokens.push({
+                              "imeGospodinjstva": gospodinjstvo.imeGospodinjstva,
+                              "idGospodinjstva": gospodinjstvo._id,
+                              "GStoken": token, //ID uporabnika v gospodinjstvu
+                              "stanjeDenarja": (Math.round(uporabnik.stanjeDenarja * 100) / 100),
+                              "isAdmin": isAdmin
+                          });
                         }
-                        tokensJSON.tokens.push({
-                            "imeGospodinjstva": gospodinjstvo.imeGospodinjstva,
-                            "idGospodinjstva": gospodinjstvo._id,
-                            "GStoken": token, //ID uporabnika v gospodinjstvu
-                            "isAdmin": isAdmin
-                        });
                     }
                     return res.status(200).json(tokensJSON);
                 }
