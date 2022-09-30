@@ -22,7 +22,12 @@ const registracija = (req, res) => {
                 res.status(500).json(napaka);
             }
         } else {
-            res.status(200).json({ "DStoken": uporabnik.generirajJwt() });
+            res.status(200).json({
+              "imeUporabnika": uporabnik.ime,
+              "idUporabnika": uporabnik.id,
+              "barvaUporabnika": uporabnik.barvaUporabnika,
+              "DStoken": uporabnik.generirajJwt()
+            });
         }
     });
 };

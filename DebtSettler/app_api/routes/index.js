@@ -47,7 +47,7 @@ router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika)
 router.get('/seznam/gospodinjstvo', avtentikacija, ctrlSeznam.pridobiVseGospodinjstvo); //pricakuje GStoken uporabnika | vrne seznam v gospodinsjtvu
 router.get('/seznam/user', avtentikacija, ctrlSeznam.pridobiVseUser); //pricakuje GStoken uporabnika | vrne seznam uporabnika v gospodinsjtvu
 router.post('/seznam/novo', avtentikacija, ctrlSeznam.vnesiNovArtikelSeznam); //pricakuje GStoken uporabnika, opis, naslov, kolicino | doda na seznam
-router.delete('/seznam', avtentikacija, ctrlSeznam.izbrisiArtikelSeznama); //pricakuje GStoken posiljatelja ali admina in :idArtikla v URL | izbrise artikel iz seznama
+router.delete('/seznam', avtentikacija, ctrlSeznam.izbrisiArtikelSeznama); //pricakuje GStoken uporabnika in :idArtikla v URL | izbrise artikel iz seznama
 router.post('/seznam/posodobi', avtentikacija, ctrlSeznam.posodobiVnos); //pricakuje GStoken uporabnika, opis, naslov, kolicino, idArtikla, stanje aquired (true/ false) | posodobi artikel na seznamu
 
 /* Nakupi */
