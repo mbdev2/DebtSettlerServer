@@ -2,8 +2,10 @@
 ## _The Last Spending App You Will Ever Need!_
 
 This repo contains the REST API portion of our project. We also created an universal mobile app and a React-based web app.
+
 Flutter Mobile APP: TBD
-React Web APP: 
+
+React Web APP: https://github.com/mbdev2/DebtSettlerWeb
 
 DebtSettler is a cloud-enabled and mobile-ready household spending tracker designed for use in dorms and shared apartments.
 Developed by Mark Breznik and Blaž Pridgar for a course in our gradute study program at the Faculty of Electrical Engineering, University of Ljubljana
