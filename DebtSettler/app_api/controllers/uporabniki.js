@@ -149,7 +149,7 @@ const izbrisiUporabnika = (req, res) => {
 };
 
 const dodajSliko = (req, res) => { //TBD
-  res.status(200).json({ status: "uspešno" });
+  res.status(200).json({ "status": "uspešno" });
 };
 
 module.exports = {

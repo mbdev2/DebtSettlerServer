@@ -29,7 +29,7 @@ const vnesiNovArtikelSeznam = (req, res) => {
           if (napaka) {
             return res.status(500).json(napaka);
           } else {
-            return res.status(201).json({ status: "Artikel uspešno vnesen na seznam." });
+            return res.status(201).json({ "status": "Artikel uspešno vnesen na seznam." });
           }
         });
       }
@@ -56,7 +56,7 @@ const izbrisiArtikelSeznama = (req, res) => {
         for (var i = 0; i < tabelaArtiklov.length; i++) {
           var artikel = gospodinjstvo.nakupovalniSeznamGospodinjstvo.find(artikel => artikel._id == tabelaArtiklov[i]);
           if (!artikel) {
-            return res.status(404).json({ status: "Uporabnik " + tabelaArtiklov[i] + " ne obstaja v tem gospodinsjtvu." });
+            return res.status(404).json({ "status": "Artikel " + tabelaArtiklov[i] + " ne obstaja v tem gospodinsjtvu." });
           }
           artikel.remove()
         }
@@ -64,7 +64,7 @@ const izbrisiArtikelSeznama = (req, res) => {
           if (napaka) {
             return res.status(500).json(napaka);
           } else {
-            return res.status(204).json({ status: "Artikel uspešno zbrisan." });
+            return res.status(204).json({ "status": "Artikel uspešno zbrisan." });
           }
         });
       }
@@ -132,7 +132,7 @@ const posodobiVnos = (req, res) => {
       } else {
         var artikel = gospodinjstvo.nakupovalniSeznamGospodinjstvo.find(artikel => artikel._id == req.body.idArtikla);
         if (!artikel) {
-          return res.status(404).json({ status: "Artikel ne obstaja." });
+          return res.status(404).json({ "status": "Artikel ne obstaja." });
         }
         artikel.naslov = req.body.naslov
         artikel.opis = req.body.opis
@@ -143,7 +143,7 @@ const posodobiVnos = (req, res) => {
           if (napaka) {
             return res.status(500).json(napaka);
           } else {
-            return res.status(201).json({ status: "Artikel uspešno zbrisan." });
+            return res.status(201).json({ "status": "Artikel uspešno posodobljen." });
           }
         });
       }

@@ -29,13 +29,13 @@ const vnesiNakup = (req, res) => {
         for (var i = 0; i < tabelaDeležnihUp.length; i++) {
           var uporabnikPosodobi = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == tabelaDeležnihUp[i]); //==upVGosID
           if (!uporabnikPosodobi) {
-            return res.status(500).json({ status: "Uporabnik " + tabelaDeležnihUp[i] + " ne obstaja v tem gospodinsjtvu." });
+            return res.status(500).json({ "status": "Uporabnik " + tabelaDeležnihUp[i] + " ne obstaja v tem gospodinsjtvu." });
           }
           uporabnikPosodobi.stanjeDenarja -= Math.round(req.body.znesekNakupa / (tabelaDeležnihUp.length + 1) * 100) / 100 //znezekNakupa/ stevilo_vseh_prejemnikov (vkljucno s placnikom)
         }
         var uporabnikPosodobi = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == upVGosID); //==upVGosID
         if (!uporabnikPosodobi) {
-          return res.status(500).json({ status: "Uporabnik " + tabelaDeležnihUp[i] + " ne obstaja v tem gospodinsjtvu." });
+          return res.status(500).json({ "status": "Uporabnik " + tabelaDeležnihUp[i] + " ne obstaja v tem gospodinsjtvu." });
         }
         uporabnikPosodobi.stanjeDenarja += Math.round(req.body.znesekNakupa * tabelaDeležnihUp.length / (tabelaDeležnihUp.length + 1) * 100) / 100
         uporabnikPosodobi.porabljenDenar += Math.round(req.body.znesekNakupa * 100) / 100
@@ -52,7 +52,7 @@ const vnesiNakup = (req, res) => {
           if (napaka) {
             return res.status(500).json(napaka);
           } else {
-            return res.status(201).json({ status: "Nakup uspešno vnesen." });
+            return res.status(201).json({ "status": "Nakup uspešno vnesen." });
           }
         });
       }
@@ -79,19 +79,19 @@ const izbrisiNakup = (req, res) => {
       } else {
         var nakup = gospodinjstvo.nakupiGospodinjstvo.find(nakup => nakup._id == req.params.idNakupa);
         if (!nakup) {
-          return res.status(404).json({ status: "Nakup ne obstaja." });
+          return res.status(404).json({ "status": "Nakup ne obstaja." });
         }
         if (nakup.upVGosID == upVGosID || gospodinjstvo.adminGospodinjstva == idUporabnika) { //izbrise ga lahko admin ali uporabnik, ki ga je ustvaril
           for (var i = 0; i < nakup.tabelaUpVGos.length; i++) {
             var uporabnikPosodobi = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == nakup.tabelaUpVGos[i]); //==upVGosID
             if (!uporabnikPosodobi) {
-              return res.status(500).json({ status: "Uporabnik " + nakup.tabelaUpVGos[i] + " ne obstaja v tem gospodinsjtvu." });
+              return res.status(500).json({ "status": "Uporabnik " + nakup.tabelaUpVGos[i] + " ne obstaja v tem gospodinsjtvu." });
             }
             uporabnikPosodobi.stanjeDenarja += Math.round(nakup.znesekNakupa / (nakup.tabelaUpVGos.length + 1) * 100) / 100 //znezekNakupa/ stevilo_vseh_prejemnikov (vkljucno s placnikom)
           }
           var uporabnikPosodobi = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == nakup.upVGosID); //==upVGosID
           if (!uporabnikPosodobi) {
-            return res.status(500).json({ status: "Uporabnik " + nakup.tabelaUpVGos[i] + " ne obstaja v tem gospodinsjtvu." });
+            return res.status(500).json({ "status": "Uporabnik " + nakup.tabelaUpVGos[i] + " ne obstaja v tem gospodinsjtvu." });
           }
           uporabnikPosodobi.stanjeDenarja -= Math.round(nakup.znesekNakupa * nakup.tabelaUpVGos.length / (nakup.tabelaUpVGos.length + 1) * 100) / 100
           uporabnikPosodobi.porabljenDenar -= Math.round(nakup.znesekNakupa * 100) / 100
@@ -102,12 +102,12 @@ const izbrisiNakup = (req, res) => {
             if (napaka) {
               return res.status(500).json(napaka);
             } else {
-              return res.status(204).json({ status: "Nakup uspešno zbrisan." });
+              return res.status(204).json({ "status": "Nakup uspešno zbrisan." });
             }
           });
         }
         else {
-          return res.status(401).json({ status: "Nimate pravice spreminjati ta nakup" });
+          return res.status(401).json({ "status": "Nimate pravice spreminjati ta nakup" });
         }
       }
     });
@@ -176,7 +176,7 @@ const poravnavaDolga = (req, res) => {
         var uporabnikPrejemnik = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == req.body.prejemnikIdUpvGos); //==upVGosID
         var uporabnikPosiljatelj = gospodinjstvo.uporabnikGospodinjstvo.find(uporabnikPosodobi => uporabnikPosodobi._id == upVGosID); //==upVGosID
         if (!uporabnikPrejemnik || !uporabnikPosiljatelj) {
-          return res.status(500).json({ status: "Eden izmed podanih uporabnikov ne obstaja v tem gospodinsjtvu." });
+          return res.status(500).json({ "status": "Eden izmed podanih uporabnikov ne obstaja v tem gospodinsjtvu." });
         }
         uporabnikPrejemnik.stanjeDenarja -= Math.round(req.body.znesek * 100) / 100
         uporabnikPrejemnik.porabljenDenar -= Math.round(req.body.znesek * 100) / 100
@@ -210,7 +210,7 @@ const poravnavaDolga = (req, res) => {
                 if (napaka) {
                   return res.status(500).json(napaka);
                 } else {
-                  return res.status(201).json({ status: "Poravnava uspešno izvedena." });
+                  return res.status(201).json({ "status": "Poravnava uspešno izvedena." });
                 }
               });
             }

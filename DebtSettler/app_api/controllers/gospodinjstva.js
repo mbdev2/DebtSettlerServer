@@ -137,17 +137,17 @@ const izbrisiGospodinjstvo = (req, res) => {
             } else {
                 if (gospodinjstvo.adminGospodinjstva == idUporabnika) { // preverimo ce je to klical admin
                     gospodinjstvo.remove()
-                    return res.status(204).json({ status: "Gospodinjstvo uspešno izbrisano" });
+                    return res.status(204).json({ "status": "Gospodinjstvo uspešno izbrisano" });
                 }
                 else {
-                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ "status": "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
 };
 
 const posodobiImeGospodinjstva = (req, res) => {
-    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.posodobiImeGospodinjstva) {
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.imeGospodinjstva) {
         return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
@@ -169,12 +169,12 @@ const posodobiImeGospodinjstva = (req, res) => {
                         if (napaka) {
                             return res.status(500).json(napaka);
                         } else {
-                            return res.status(201).json({ status: "Ime gospodinjstva uspešno posodobljeno" });
+                            return res.status(201).json({ "status": "Ime gospodinjstva uspešno posodobljeno" });
                         }
                     });
                 }
                 else {
-                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ "status": "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
@@ -227,7 +227,7 @@ const dodajClana = (req, res) => {
                                     if (napaka) {
                                         return res.status(500).json(napaka);
                                     } else {
-                                        return res.status(201).json({ status: status });
+                                        return res.status(201).json({ "status": status });
                                     }
                                 });
                             }
@@ -235,7 +235,7 @@ const dodajClana = (req, res) => {
                         });
                 }
                 else {
-                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ "status": "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
@@ -266,12 +266,12 @@ const odstraniClana = (req, res) => {
                         if (napaka) {
                             return res.status(500).json(napaka);
                         } else {
-                            return res.status(201).json({ status: "Uporabnik uspešno odstranjen." });
+                            return res.status(201).json({ "status": "Uporabnik uspešno odstranjen." });
                         }
                     });
                 }
                 else {
-                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ "status": "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });
@@ -301,11 +301,11 @@ const zamrzniClana = (req, res) => {
                         if (napaka) {
                             return res.status(500).json(napaka);
                         } else {
-                            return res.status(201).json({ status: "Uporabnik uspešno zamrznjen." });
+                            return res.status(201).json({ "status": "Uporabnik uspešno zamrznjen." });
                         }
                     });
                 } else {
-                    return res.status(500).json({ status: "Nedovoljena poteza. Uporabnik je trenutno v stanju odstranjen" });
+                    return res.status(500).json({ "status": "Nedovoljena poteza. Uporabnik je trenutno v stanju odstranjen" });
                 }
             }
         });
@@ -336,12 +336,12 @@ const odmrzniClana = (req, res) => {
                         if (napaka) {
                             return res.status(500).json(napaka);
                         } else {
-                            return res.status(201).json({ status: "Uporabnik uspešno odmrznjen." });
+                            return res.status(201).json({ "status": "Uporabnik uspešno odmrznjen." });
                         }
                     });
                 }
                 else {
-                    return res.status(500).json({ status: "Nedovoljena poteza. Uporabnik je trenutno v stanju odstranjen" });
+                    return res.status(500).json({ "status": "Nedovoljena poteza. Uporabnik je trenutno v stanju odstranjen" });
                 }
             }
         });
@@ -433,16 +433,16 @@ const adminPredaja = (req, res) => {
                             if (napaka) {
                                 return res.status(500).json(napaka);
                             } else {
-                                return res.status(201).json({ status: "Admin uspešno zamenjan." });
+                                return res.status(201).json({ "status": "Admin uspešno zamenjan." });
                             }
                         });
                     }
                     else {
-                        return res.status(404).json({ status: "Uporabnik s podanim idUporabnika ne obstaja v tem gospodinsjtvu" });
+                        return res.status(404).json({ "status": "Uporabnik s podanim idUporabnika ne obstaja v tem gospodinsjtvu" });
                     }
                 }
                 else {
-                    return res.status(401).json({ status: "Nimate admin nadzora nad tem gospodinjstvom." });
+                    return res.status(401).json({ "status": "Nimate admin nadzora nad tem gospodinjstvom." });
                 }
             }
         });

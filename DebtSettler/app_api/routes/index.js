@@ -32,8 +32,8 @@ router.post('/gospodinjstvo/dodajClana', avtentikacija, ctrlGospodinjstva.dodajC
 router.post('/gospodinjstvo/odstraniClana', avtentikacija, ctrlGospodinjstva.odstraniClana); //pricakuje GStoken admina in upVGosID clana ki ga zelimo odstraniti | odstrani clana gospodinjstvu
 router.delete('/gospodinjstvo/izbrisi', avtentikacija, ctrlGospodinjstva.izbrisiGospodinjstvo); //pricakuje GStoken admina | zbrise gospodinjstvo
 router.post('/gospodinjstvo/posodobiImeGospodinjstva', avtentikacija, ctrlGospodinjstva.posodobiImeGospodinjstva); //pricakuje GStoken admina in novo imeGospodinsjtva | posodobi ime gospodinsjtva
-router.get('/gospodinjstvo/zamrzniClana', avtentikacija, ctrlGospodinjstva.zamrzniClana); //pricakuje GStoken uporabnika | zamrzne uporabnika
-router.get('/gospodinjstvo/odmrzniClana', avtentikacija, ctrlGospodinjstva.odmrzniClana); //pricakuje GStoken uporabnika | odmrzne uporabnika
+router.get('/gospodinjstvo/zamrzniClana', avtentikacija, ctrlGospodinjstva.zamrzniClana); //pricakuje GStoken uporabnika in uporabnikVgospodinjstvuID clana | zamrzne uporabnika
+router.get('/gospodinjstvo/odmrzniClana', avtentikacija, ctrlGospodinjstva.odmrzniClana); //pricakuje GStoken uporabnika in uporabnikVgospodinjstvuID clana | odmrzne uporabnika
 router.post('/gospodinjstvo/adminPredaja', avtentikacija, ctrlGospodinjstva.adminPredaja); //pricakuje GStoken admina in idUporabnika novega admina | posodobi admina gospodinjstva
 
 /* Uporabniki */
@@ -47,7 +47,7 @@ router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika)
 router.get('/seznam/gospodinjstvo', avtentikacija, ctrlSeznam.pridobiVseGospodinjstvo); //pricakuje GStoken uporabnika | vrne seznam v gospodinsjtvu
 router.get('/seznam/user', avtentikacija, ctrlSeznam.pridobiVseUser); //pricakuje GStoken uporabnika | vrne seznam uporabnika v gospodinsjtvu
 router.post('/seznam/novo', avtentikacija, ctrlSeznam.vnesiNovArtikelSeznam); //pricakuje GStoken uporabnika, opis, naslov, kolicino | doda na seznam
-router.delete('/seznam', avtentikacija, ctrlSeznam.izbrisiArtikelSeznama); //pricakuje GStoken uporabnika in :idArtikla v URL | izbrise artikel iz seznama
+router.delete('/seznam', avtentikacija, ctrlSeznam.izbrisiArtikelSeznama); //pricakuje GStoken uporabnika in idArtikla v body | izbrise artikel iz seznama
 router.post('/seznam/posodobi', avtentikacija, ctrlSeznam.posodobiVnos); //pricakuje GStoken uporabnika, opis, naslov, kolicino, idArtikla, stanje aquired (true/ false) | posodobi artikel na seznamu
 
 /* Nakupi */
