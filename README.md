@@ -39,7 +39,9 @@ And of course, DebtSettler itself is open source!
 We recommend using your local server and running it via Docker. To make it accesible to the outisde world, we recommend a free DDNS (e.g. DuckDNS) and a reverse proxy (e.g. Caddy).
 
 Docker:
+
 docker-compose up --build #first time build
+
 docker-compose up -d --build #rebuild without destroying container data
 
 ## Development
