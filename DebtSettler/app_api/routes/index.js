@@ -40,8 +40,8 @@ router.post('/gospodinjstvo/adminPredaja', avtentikacija, ctrlGospodinjstva.admi
 router.get('/users/podatkiUporabnika', avtentikacija, ctrlUporabniki.podatkiUporabnika); //pricakuje DStoken uporabnika | vrne idUporabnika, imeUporabnika, emailUporabnika, barvaUporabnika
 router.post('/users/posodobiUporabnika', avtentikacija, ctrlUporabniki.posodobiUporabnika); //pricakuje DStoken uporabnika, imeUp, emailUp, barvaUp | posodobi uporabnika
 router.post('/users/menjavaGesla', avtentikacija, ctrlUporabniki.menjavaGesla); //pricakuje DStoken uporabnika geslo, novoGeslo | posodobi geslo uporabnika
-router.post('/users/dodajSliko', avtentikacija, ctrlUporabniki.dodajSliko); // TBD
-router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika); //pricakuje DStoken uporabnika | pregleda ce je kje Admin, zamenja ID gospodSinsjtvih v 'Uporabnik_je_izbrisan' in izbrise globalni vnos za uporabnika
+//router.post('/users/dodajSliko', avtentikacija, ctrlUporabniki.dodajSliko); // TBD
+router.delete('/users/izbrisi', avtentikacija, ctrlUporabniki.izbrisiUporabnika); //pricakuje DStoken uporabnika | pregleda ce je kje Admin, zamenja ID gospodinsjtvih v 'Uporabnik_je_izbrisan' in izbrise globalni vnos za uporabnika
 
 /* Nakupovalni seznam */
 router.get('/seznam/gospodinjstvo', avtentikacija, ctrlSeznam.pridobiVseGospodinjstvo); //pricakuje GStoken uporabnika | vrne seznam v gospodinsjtvu
@@ -58,7 +58,7 @@ router.post('/nakupi/poravnavaDolga', avtentikacija, ctrlNakupi.poravnavaDolga);
 router.delete('/nakupi/:idNakupa', avtentikacija, ctrlNakupi.izbrisiNakup); //pricakuje GStoken posiljatelja ali admina in :idNakupa v URL | izbrise nakup in povrne denarna sredstva
 
 /* Podatkovna baza */
-router.get('/brisidb', ctrlOstalo.brisiDB);
-router.get('/polnidb', ctrlOstalo.polniDB);
+//router.get('/brisidb', ctrlOstalo.brisiDB); //TBD
+//router.get('/polnidb', ctrlOstalo.polniDB); //TBD
 
 module.exports = router;
