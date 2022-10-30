@@ -12,6 +12,8 @@ Developed by Mark Breznik and Blaž Pridgar for a course in our gradute study pr
 
 ## Features
 
+API DOCUMENTATION: https://documenter.getpostman.com/view/17576566/2s8YRdsb5q
+
 - Track household purchases with a flick of your finger
 - Figure out who owes who what
 - Share a cloud-synced shopping list with your housemates
