@@ -147,7 +147,7 @@ const izbrisiGospodinjstvo = (req, res) => {
 };
 
 const posodobiImeGospodinjstva = (req, res) => {
-    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.imeGospodinjstv) {
+    if (!req.payload.upVGosID || !req.payload.idGospodinjstva || !req.body.posodobiImeGospodinjstva) {
         return res.status(400).json({ "sporočilo": "Zahtevani so vsi podatki" });
     }
     var idGospodinjstva = req.payload.idGospodinjstva;
