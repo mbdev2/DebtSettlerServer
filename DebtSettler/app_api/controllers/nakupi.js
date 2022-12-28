@@ -197,12 +197,17 @@ const poravnavaDolga = (req, res) => {
             } else {
               var imePosiljatelja = uporabniki.find(u => u._id == uporabnikPosiljatelj.uporabnikID)
               var imePrejemnika = uporabniki.find(u => u._id == uporabnikPrejemnik.uporabnikID)
-              var opis = 'Uporabnik/ca ' + imePosiljatelja.ime + ' je uporabniku/ci ' + imePrejemnika.ime + ' dal ' + req.body.znesek + '€ za poravnavo dolga.';
+              if (req.body.znesek<0){
+                var pomoc=imePosiljatelja
+                imePosiljatelja=imePrejemnika
+                imePrejemnika=pomoc
+              }
+              var opis = 'Uporabnik/ca ' + imePosiljatelja.ime + ' je uporabniku/ci ' + imePrejemnika.ime + ' dal ' + Math.abs(req.body.znesek) + '€ za poravnavo dolga.';
               gospodinjstvo.nakupiGospodinjstvo.addToSet({
                 kategorijaNakupa: 0, // kategorija za poravnave
                 imeTrgovine: 'Poravnava dolga',
                 opisNakupa: opis,
-                znesekNakupa: req.body.znesek,
+                znesekNakupa: Math.abs(req.body.znesek),
                 upVGosID: upVGosID,
                 tabelaUpVGos: req.body.prejemnikIdUpvGos
               });

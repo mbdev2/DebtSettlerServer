@@ -1,6 +1,14 @@
 version: "3.6"
 
 services:
+  mongo-db:
+    image: mongo
+    restart: always
+    container_name: debtsettler-mongodb
+    ports:
+      - "27017-27019:27017-27019"
+    networks:
+      - debtsettler-network
   node-api:
     container_name: debtsettler-server
     restart: always
@@ -16,13 +24,6 @@ services:
     environment:
       - NODE_ENV=docker
     command: "npm start"
-    networks:
-      - debtsettler-network
-  mongo-db:
-    image: mongo
-    container_name: debtsettler-mongodb
-    ports:
-      - "27017-27019:27017-27019"
     networks:
       - debtsettler-network
 networks:
